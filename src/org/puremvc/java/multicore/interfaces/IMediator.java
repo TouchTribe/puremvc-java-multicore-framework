@@ -6,6 +6,10 @@
  */
 package org.puremvc.java.multicore.interfaces;
 
+import org.puremvc.java.multicore.patterns.mediator.MediatorObserver;
+
+import java.util.List;
+
 /**
  * The interface definition for a PureMVC Mediator.
  *
@@ -102,26 +106,16 @@ public interface IMediator extends INotifier {
 	 */
 	public void setViewComponent(Object viewComponent);
 
-	/**
-	 * List <code>INotification</code> interests.
-	 *
-	 * @return an <code>Array</code> of the <code>INotification</code> names
-	 *         this <code>IMediator</code> has an interest in.
-	 */
-	public String[] listNotificationInterests();
-
-	/**
-	 * Handle an <code>INotification</code>.
-	 *
-	 * @param notification
-	 *            the <code>INotification</code> to be handled
-	 */
-	public void handleNotification(INotification notification);
 
 	/**
 	 * Called by the View when the Mediator is registered.
 	 */
 	public void onRegister();
+
+    public void registerObserver(String notificationName, String methodName);
+    public void registerObserver(String notificationName, Object target, String methodName);
+
+    public List<MediatorObserver> getObservers();
 
 	/**
 	 * Called by the View when the Mediator is removed.

@@ -207,7 +207,7 @@ public class Facade implements IFacade {
 	 * @param command
 	 *            an instance of the <code>ICommand</code>
 	 */
-	public void registerCommand(String noteName, ICommand command) {
+	public void registerCommand(String noteName, Class command) {
 		this.controller.registerCommand(noteName, command);
 	}
 

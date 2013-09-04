@@ -38,7 +38,7 @@ public interface IController {
 	 * @param command
 	 *            the Class of the <code>ICommand</code>
 	 */
-	public void registerCommand(String notificationName, ICommand command);
+	public void registerCommand(String notificationName, Class command);
 
 	/**
 	 * Execute the <code>ICommand</code> previously registered as the handler

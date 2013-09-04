@@ -6,6 +6,8 @@
  */
 package org.puremvc.java.multicore.core.view;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +18,7 @@ import org.puremvc.java.multicore.interfaces.IMediator;
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.interfaces.IObserver;
 import org.puremvc.java.multicore.interfaces.IView;
+import org.puremvc.java.multicore.patterns.mediator.MediatorObserver;
 import org.puremvc.java.multicore.patterns.observer.Observer;
 
 /**
@@ -181,27 +184,16 @@ public class View implements IView {
 			// Register the Mediator for retrieval by name
 			this.mediatorMap.put(mediator.getMediatorName(), mediator);
 
-			// Get Notification interests, if any.
-			String[] noteInterests = mediator.listNotificationInterests();
-			if (noteInterests.length != 0) {
+            for (final MediatorObserver mediatorObserver : mediator.getObservers()) {
+                IFunction function = new IFunction() {
 
-				// Create java style function ref to mediator.handleNotification
-				IFunction function = new IFunction() {
-
-					public void onNotification(INotification notification) {
-						mediator.handleNotification(notification);
-					}
-				};
-
-				// Create Observer
-				Observer observer = new Observer(function, mediator);
-
-				// Register Mediator as Observer for its list of Notification
-				// interests
-				for (int i = 0; i < noteInterests.length; i++) {
-					registerObserver(noteInterests[i], observer);
-				}
-			}
+                    public void onNotification(INotification notification) {
+                        mediatorObserver.handleNotification(notification);
+                    }
+                };
+                Observer observer = new Observer(function, mediator);
+                registerObserver(mediatorObserver.getNotificationName(), observer);
+            }
 
 			// alert the mediator that it has been registered
 			mediator.onRegister();
@@ -237,13 +229,9 @@ public class View implements IView {
 		IMediator mediator = mediatorMap.get(mediatorName);
 
 		if(mediator != null) {
-			// for every notification this mediator is interested in...
-			String[] interests = mediator.listNotificationInterests();
-			for (int i=0; i<interests.length; i++) {
-				// remove the observer linking the mediator 
-				// to the notification interest
-				removeObserver(interests[i], mediator);
-			}
+            for (MediatorObserver observer : mediator.getObservers()) {
+                removeObserver(observer.getNotificationName(), mediator);
+            }
 
 			// remove the mediator from the map
 			mediatorMap.remove(mediatorName);

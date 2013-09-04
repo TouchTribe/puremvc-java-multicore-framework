@@ -3,9 +3,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.puremvc</groupId>
 	<artifactId>PureMVC_Java_MultiCore</artifactId>
-	<version>1.0.8</version>
+	<version>1.0.8-touchtribe</version>
 	<packaging>jar</packaging>
 	<name>PureMVC_Java_MultiCore</name>
+    <repositories>
+        <repository>
+            <id>external</id>
+            <url>http://maven.techtribe.nl/nexus/content/groups/external</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>external</id>
+            <url>http://maven.techtribe.nl/nexus/content/groups/external</url>
+        </pluginRepository>
+    </pluginRepositories>
 	<description>
 		PureMVC is a lightweight framework for creating applications
 		based upon the classic Model-View-Controller design
@@ -61,14 +73,19 @@
 			<timezone>+1</timezone>
 		</developer>
 	</developers>
-	<dependencies></dependencies>
+	<dependencies>
+        <dependency>
+            <groupId>android</groupId>
+            <artifactId>android</artifactId>
+            <version>1.6_r3</version>
+            <scope>provided</scope>
+        </dependency>
+	</dependencies>
 	<distributionManagement>
-		<repository>
-			<id>PureMVC</id>
-			<name>repository PureMVC</name>
-			<url>
-				http://svn.puremvc.org/PureMVC_Java_MultiCore/repo
-			</url>
-		</repository>
+        <repository>
+            <id>thirdparty</id>
+            <name>Internal Releases</name>
+            <url>http://maven.techtribe.nl/nexus/content/repositories/thirdparty/</url>
+        </repository>
 	</distributionManagement>
 </project>

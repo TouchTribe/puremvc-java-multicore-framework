@@ -6,10 +6,15 @@
  */
 package org.puremvc.java.multicore.patterns.mediator;
 
+import android.util.Log;
 import org.puremvc.java.multicore.interfaces.IMediator;
 import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.interfaces.INotifier;
 import org.puremvc.java.multicore.patterns.observer.Notifier;
+
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A base <code>IMediator</code> implementation.
@@ -33,6 +38,8 @@ public class Mediator extends Notifier implements IMediator, INotifier {
 	 */
 	protected Object viewComponent = null;
 
+    protected List<MediatorObserver> observers = null;
+
     /**
      * Default constructor.
      *
@@ -40,6 +47,7 @@ public class Mediator extends Notifier implements IMediator, INotifier {
      *
      */
     public Mediator() {
+        observers = new ArrayList<MediatorObserver>();
     }
 
     public void init(String mediatorName, Object viewComponent) {
@@ -90,29 +98,28 @@ public class Mediator extends Notifier implements IMediator, INotifier {
 		return this.viewComponent;
 	}
 
-	/**
-	 * Handle <code>INotification</code>s.
-	 *
-	 * <P>
-	 * Typically this will be handled in a switch statement, with one 'case'
-	 * entry per <code>INotification</code> the <code>Mediator</code> is
-	 * interested in.
-	 * @param notification
-	 */
-	public void handleNotification(INotification notification) {
-	}
+    public void registerObserver(String notificationName, String methodName)
+    {
+        registerObserver(notificationName, this, methodName);
+    }
 
-	/**
-	 * List the <code>INotification</code> names this <code>Mediator</code>
-	 * is interested in being notified of.
-	 *
-	 * @return String[] the list of <code>INotification</code> names
-	 */
-	public String[] listNotificationInterests() {
-		return new String[]{};
-	}
+    public void registerObserver(String notificationName, Object target, String methodName)
+    {
+        try {
+            Method method = target.getClass().getDeclaredMethod(methodName, INotification.class);
+            MediatorObserver observer = new MediatorObserver(target, method, notificationName);
+            observers.add(observer);
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "Could create MediatorObserver " + notificationName + " -> " + methodName, e);
+        }
+    }
 
-	/**
+    public List<MediatorObserver> getObservers()
+    {
+        return observers;
+    }
+
+    /**
 	 * Called by the View when the Mediator is registered.
 	 */
 	public void onRegister() {

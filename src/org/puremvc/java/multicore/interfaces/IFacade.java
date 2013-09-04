@@ -74,7 +74,7 @@ public interface IFacade extends INotifier {
 	 *            a reference to the <code>Class</code> of the
 	 *            <code>ICommand</code>.
 	 */
-	public void registerCommand(String noteName, ICommand commandClassRef);
+	public void registerCommand(String noteName, Class commandClassRef);
 
 	/**
 	 * Remove a previously registered <code>ICommand</code> to <code>INotification</code> mapping from the Controller.

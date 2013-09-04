@@ -6,6 +6,8 @@
  */
 package org.puremvc.java.multicore.core.controller;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,7 +56,7 @@ public class Controller implements IController {
 	/**
 	 * Mapping of Notification names to Command Class references
 	 */
-	protected Map<String, ICommand> commandMap;
+	protected Map<String, Class> commandMap;
 
 	/**
 	 * Local reference to View
@@ -84,7 +86,7 @@ public class Controller implements IController {
 	protected Controller(String key) {
 		multitonKey = key;
 		instanceMap.put(multitonKey, this);
-		this.commandMap = new HashMap<String, ICommand>();
+		this.commandMap = new HashMap<String, Class>();
 		initializeController();
 	}
 
@@ -134,11 +136,23 @@ public class Controller implements IController {
 	public void executeCommand(INotification note) {
 		//No reflexion in GWT
 		//ICommand commandInstance = (ICommand) commandClassRef.newInstance();
-		ICommand commandInstance = (ICommand) this.commandMap.get(note.getName());
-		if(commandInstance!=null){
-			commandInstance.initializeNotifier(multitonKey);
-			commandInstance.execute(note);
-		}
+		Class cls =  (Class) this.commandMap.get(note.getName());
+		if(cls!=null){
+            try {
+                Constructor constructor = cls.getConstructor();
+                ICommand commandInstance = (ICommand)constructor.newInstance(new Object[] {});
+                commandInstance.initializeNotifier(multitonKey);
+                commandInstance.execute(note);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InvocationTargetException e) {
+                e.printStackTrace();
+            }
+        }
 	}
 
 	/**
@@ -159,7 +173,7 @@ public class Controller implements IController {
 	 * @param command
 	 *            an instance of <code>ICommand</code>
 	 */
-	public void registerCommand(String notificationName, ICommand command) {
+	public void registerCommand(String notificationName, Class command) {
 		if (null != this.commandMap.put(notificationName, command)) return;
 		this.view.registerObserver(notificationName, new Observer(new IFunction() {
 			public void onNotification(INotification notification) {
