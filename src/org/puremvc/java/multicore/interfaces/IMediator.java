@@ -6,9 +6,10 @@
  */
 package org.puremvc.java.multicore.interfaces;
 
-import org.puremvc.java.multicore.patterns.mediator.MediatorObserver;
+import android.view.View;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * The interface definition for a PureMVC Mediator.
@@ -20,7 +21,7 @@ import java.util.List;
  * <UL>
  * <LI>Implement a common method which returns a list of all
  * <code>INotification</code>s the <code>IMediator</code> has interest in.</LI>
- * <LI>Implement a common notification (callback) method.</LI>
+ * <LI>Implement a common note (callback) method.</LI>
  * </UL>
  * <P>
  * Additionally, <code>IMediator</code>s typically:
@@ -69,13 +70,13 @@ import java.util.List;
  * public function listNotificationInterests():Array { return [
  * MyFacade.SET_SELECTION, MyFacade.SET_DATAPROVIDER ]; }
  *
- * public function handleNotification( notification:INotification ):void {
- * switch ( notification.getName() ) { case MyFacade.SET_SELECTION:
- * setSelection(notification); break; case MyFacade.SET_DATAPROVIDER:
- * setDataProvider(notification); break; } } // Set the data provider of the
- * combo box private function setDataProvider( notification:INotification ):void {
- * combo.dataProvider = notification.getBody() as Array; } // Invoked when the
- * combo box dispatches a change event, we send a // notification with the
+ * public function handleNotification( note:INotification ):void {
+ * switch ( note.getName() ) { case MyFacade.SET_SELECTION:
+ * setSelection(note); break; case MyFacade.SET_DATAPROVIDER:
+ * setDataProvider(note); break; } } // Set the data provider of the
+ * combo box private function setDataProvider( note:INotification ):void {
+ * combo.dataProvider = note.getBody() as Array; } // Invoked when the
+ * combo box dispatches a change event, we send a // note with the
  * private function onChange(event:ListEvent):void { sendNotification(
  * MyFacade.MYCOMBO_CHANGED, this ); } // A private getter for accessing the
  * view object by class private function get combo():ComboBox { return view as
@@ -97,25 +98,15 @@ public interface IMediator extends INotifier {
 	 *
 	 * @return Object the view component
 	 */
-	public Object getViewComponent();
-
-	/**
-	 * Set the <code>IMediator</code>'s view component.
-	 *
-	 * @param Object the view component
-	 */
-	public void setViewComponent(Object viewComponent);
-
+	public View getView();
 
 	/**
 	 * Called by the View when the Mediator is registered.
 	 */
 	public void onRegister();
 
-    public void registerObserver(String notificationName, String methodName);
-    public void registerObserver(String notificationName, Object target, String methodName);
-
-    public List<MediatorObserver> getObservers();
+    public void registerObserver(String notificationName, IFunction listener);
+    public Map<String, IFunction> getObservers();
 
 	/**
 	 * Called by the View when the Mediator is removed.

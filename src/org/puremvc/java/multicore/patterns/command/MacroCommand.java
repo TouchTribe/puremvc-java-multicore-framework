@@ -112,14 +112,14 @@ public class MacroCommand extends Notifier implements ICommand {
 	 * The <i>SubCommands</i> will be called in First In/First Out (FIFO)
 	 * order.
 	 *
-	 * @param notification
+	 * @param note
 	 *            the <code>INotification</code> object to be passsed to each
 	 *            <i>SubCommand</i>.
 	 */
-	public void execute(INotification notification) {
+	public void execute(INotification note) {
 		for (ICommand command : subCommands) { 
 			command.initializeNotifier( multitonKey );
-			command.execute( notification );
+			command.execute( note );
 		}
 	}
 }

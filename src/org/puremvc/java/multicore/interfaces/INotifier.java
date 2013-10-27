@@ -38,46 +38,46 @@ public interface INotifier {
 	 * Send a <code>INotification</code>.
 	 *
 	 * <P>
-	 * Convenience method to prevent having to construct new notification
+	 * Convenience method to prevent having to construct new note
 	 * instances in our implementation code.
 	 * </P>
 	 *
-	 * @param notificationName
-	 *            the name of the notification to send
+	 * @param noteName
+	 *            the name of the note to send
 	 * @param body
-	 *            the body of the notification (optional)
+	 *            the body of the note (optional)
 	 * @param type
-	 *            the type of the notification (optional)
+	 *            the type of the note (optional)
 	 */
-	public void sendNotification(String notificationName, Object body,	String type);
+	public void sendNotification(String noteName, Object body,	String type);
 
 	/**
 	 * Send a <code>INotification</code>.
 	 *
 	 * <P>
-	 * Convenience method to prevent having to construct new notification
+	 * Convenience method to prevent having to construct new note
 	 * instances in our implementation code.
 	 * </P>
 	 *
-	 * @param notificationName
-	 *            the name of the notification to send
+	 * @param noteName
+	 *            the name of the note to send
 	 * @param body
-	 *            the body of the notification (optional)
+	 *            the body of the note (optional)
 	 */
-	public void sendNotification(String notificationName, Object body);
+	public void sendNotification(String noteName, Object body);
 
 	/**
 	 * Send a <code>INotification</code>.
 	 *
 	 * <P>
-	 * Convenience method to prevent having to construct new notification
+	 * Convenience method to prevent having to construct new note
 	 * instances in our implementation code.
 	 * </P>
 	 *
-	 * @param notificationName
-	 *            the name of the notification to send
+	 * @param noteName
+	 *            the name of the note to send
 	 */
-	public void sendNotification(String notificationName);
+	public void sendNotification(String noteName);
 
 	/**
 	 * Initialize this INotifier instance.

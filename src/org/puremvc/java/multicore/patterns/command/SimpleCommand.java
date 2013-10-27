@@ -33,9 +33,9 @@ public class SimpleCommand extends Notifier implements ICommand {
 	 * method of an <code>ICommand</code>.
 	 * </P>
 	 *
-	 * @param notification
+	 * @param note
 	 *            the <code>INotification</code> to handle.
 	 */
-	public void execute(INotification notification) {
+	public void execute(INotification note) {
 	}
 }

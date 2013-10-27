@@ -12,10 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.puremvc.java.multicore.core.view.View;
-import org.puremvc.java.multicore.interfaces.ICommand;
-import org.puremvc.java.multicore.interfaces.IController;
-import org.puremvc.java.multicore.interfaces.IFunction;
-import org.puremvc.java.multicore.interfaces.INotification;
+import org.puremvc.java.multicore.interfaces.*;
 import org.puremvc.java.multicore.patterns.observer.Observer;
 
 /**
@@ -69,6 +66,8 @@ public class Controller implements IController {
 	protected String multitonKey;
 
 	protected static Map<String, Controller> instanceMap = new HashMap<String, Controller>();
+
+    protected ILogger logger;
 
 	/**
 	 * Constructor.
@@ -142,6 +141,9 @@ public class Controller implements IController {
                 Constructor constructor = cls.getConstructor();
                 ICommand commandInstance = (ICommand)constructor.newInstance(new Object[] {});
                 commandInstance.initializeNotifier(multitonKey);
+                if (logger != null) {
+                    logger.log(commandInstance.getClass(), "Executing");
+                }
                 commandInstance.execute(note);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -168,16 +170,16 @@ public class Controller implements IController {
 	 * The Observer for the new ICommand is only created if this the
 	 * first time an ICommand has been regisered for this Notification name.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the <code>INotification</code>
 	 * @param command
 	 *            an instance of <code>ICommand</code>
 	 */
-	public void registerCommand(String notificationName, Class command) {
-		if (null != this.commandMap.put(notificationName, command)) return;
-		this.view.registerObserver(notificationName, new Observer(new IFunction() {
-			public void onNotification(INotification notification) {
-				executeCommand(notification);
+	public void registerCommand(String noteName, Class command) {
+		if (null != this.commandMap.put(noteName, command)) return;
+		this.view.registerObserver(noteName, new Observer(new IFunction() {
+			public void onNotify(INotification note) {
+				executeCommand(note);
 			}
 		}, this ) );
 	}
@@ -186,16 +188,16 @@ public class Controller implements IController {
 	 * Remove a previously registered <code>ICommand</code> to
 	 * <code>INotification</code> mapping.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the <code>INotification</code> to remove the
 	 *            <code>ICommand</code> mapping for
 	 */
-	public void removeCommand(String notificationName) {
+	public void removeCommand(String noteName) {
 		// if the Command is registered...
-		if (hasCommand(notificationName)) {
+		if (hasCommand(noteName)) {
 			// remove the observer
-			view.removeObserver(notificationName, this);
-			this.commandMap.remove(notificationName);
+			view.removeObserver(noteName, this);
+			this.commandMap.remove(noteName);
 		}
 	}
 
@@ -211,10 +213,20 @@ public class Controller implements IController {
 	/**
 	 * Check if a Command is registered for a given Notification
 	 *
-	 * @param notificationName
-	 * @return whether a Command is currently registered for the given <code>notificationName</code>.
+	 * @param noteName
+	 * @return whether a Command is currently registered for the given <code>noteName</code>.
 	 */
-	public boolean hasCommand(String notificationName) {
-		return commandMap.containsKey(notificationName);
+	public boolean hasCommand(String noteName) {
+		return commandMap.containsKey(noteName);
 	}
+
+    public ILogger getLogger()
+    {
+        return logger;
+    }
+
+    public void setLogger(ILogger logger)
+    {
+        this.logger = logger;
+    }
 }

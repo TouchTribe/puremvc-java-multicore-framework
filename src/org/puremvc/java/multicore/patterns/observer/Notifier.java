@@ -51,49 +51,49 @@ public class Notifier {
 	 * Send an <code>INotification</code>s.
 	 *
 	 * <P>
-	 * Keeps us from having to construct new notification instances in our
+	 * Keeps us from having to construct new note instances in our
 	 * implementation code.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the notiification to send
 	 * @param body
-	 *            the body of the notification (optional)
+	 *            the body of the note (optional)
 	 * @param type
-	 *            the type of the notification (optional)
+	 *            the type of the note (optional)
 	 */
-	public void sendNotification(String notificationName, Object body,
+	public void sendNotification(String noteName, Object body,
 			String type) {
-		getFacade().sendNotification(notificationName, body, type);
+		getFacade().sendNotification(noteName, body, type);
 	}
 
 	/**
 	 * Send an <code>INotification</code>s.
 	 *
 	 * <P>
-	 * Keeps us from having to construct new notification instances in our
+	 * Keeps us from having to construct new note instances in our
 	 * implementation code.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the notiification to send
 	 * @param body
-	 *            the body of the notification (optional)
+	 *            the body of the note (optional)
 	 */
-	public void sendNotification(String notificationName, Object body) {
-		getFacade().sendNotification( notificationName, body);
+	public void sendNotification(String noteName, Object body) {
+		getFacade().sendNotification( noteName, body);
 	}
 
 	/**
 	 * Send an <code>INotification</code>s.
 	 *
 	 * <P>
-	 * Keeps us from having to construct new notification instances in our
+	 * Keeps us from having to construct new note instances in our
 	 * implementation code.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the notiification to send
 	 */
-	public void sendNotification(String notificationName) {
-		getFacade().sendNotification(notificationName);
+	public void sendNotification(String noteName) {
+		getFacade().sendNotification(noteName);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class Notifier {
 	 *
 	 * <P>
 	 * Mediators, Commands or Proxies may override
-	 * this method in order to send notifications
+	 * this method in order to send notes
 	 * or access the Multiton Facade instance as
 	 * soon as possible. They CANNOT access the facade
 	 * in their constructors, since this method will not

@@ -47,13 +47,13 @@ import org.puremvc.java.multicore.interfaces.INotification;
  */
 public class Notification implements INotification {
 
-	// the name of the notification instance
+	// the name of the note instance
 	private String name = null;
 
-	// the type of the notification instance
+	// the type of the note instance
 	private String type = null;
 
-	// the body of the notification instance
+	// the body of the note instance
 	private Object body = null;
 
 	/**
@@ -149,7 +149,7 @@ public class Notification implements INotification {
 	 *         instance.
 	 */
 	public String toString() {
-		String result = "Notification Name: " + getName() + " Body:";
+		String result = getName() + " Body:";
 		if (this.body != null) {
 			result += this.body.toString() + " Type:";
 		} else {

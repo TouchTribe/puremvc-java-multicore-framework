@@ -33,38 +33,41 @@ public interface IController {
 	 * Register a particular <code>ICommand</code> class as the handler for a
 	 * particular <code>INotification</code>.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the <code>INotification</code>
 	 * @param command
 	 *            the Class of the <code>ICommand</code>
 	 */
-	public void registerCommand(String notificationName, Class command);
+	public void registerCommand(String noteName, Class command);
 
 	/**
 	 * Execute the <code>ICommand</code> previously registered as the handler
-	 * for <code>INotification</code>s with the given notification name.
+	 * for <code>INotification</code>s with the given note name.
 	 *
-	 * @param notification
+	 * @param note
 	 *            the <code>INotification</code> to execute the associated
 	 *            <code>ICommand</code> for
 	 */
-	public void executeCommand(INotification notification);
+	public void executeCommand(INotification note);
 
 	/**
 	 * Remove a previously registered <code>ICommand</code> to
 	 * <code>INotification</code> mapping.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *            the name of the <code>INotification</code> to remove the
 	 *            <code>ICommand</code> mapping for
 	 */
-	public void removeCommand(String notificationName);
+	public void removeCommand(String noteName);
 
 	/**
 	 * Check if a Command is registered for a given Notification 
 	 *
-	 * @param notificationName
-	 * @return whether a Command is currently registered for the given <code>notificationName</code>.
+	 * @param noteName
+	 * @return whether a Command is currently registered for the given <code>noteName</code>.
 	 */
-	public boolean hasCommand(String notificationName);
+	public boolean hasCommand(String noteName);
+
+    public ILogger getLogger();
+    public void setLogger(ILogger logger);
 }

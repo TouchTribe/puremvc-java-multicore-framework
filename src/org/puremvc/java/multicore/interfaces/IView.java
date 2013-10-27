@@ -110,4 +110,7 @@ public interface IView {
 	 * @return whether a Mediator is registered with the given <code>mediatorName</code>.
 	 */
 	public boolean hasMediator(String mediatorName);
+
+    public ILogger getLogger();
+    public void setLogger(ILogger logger);
 }

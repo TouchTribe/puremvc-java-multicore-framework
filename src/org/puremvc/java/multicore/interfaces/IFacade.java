@@ -79,17 +79,17 @@ public interface IFacade extends INotifier {
 	/**
 	 * Remove a previously registered <code>ICommand</code> to <code>INotification</code> mapping from the Controller.
 	 *
-	 * @param notificationName the name of the <code>INotification</code> to remove the <code>ICommand</code> mapping for
+	 * @param noteName the name of the <code>INotification</code> to remove the <code>ICommand</code> mapping for
 	 */
-	public void removeCommand(String notificationName);
+	public void removeCommand(String noteName);
 
 	/**
 	 * Check if a Command is registered for a given Notification
 	 *
-	 * @param notificationName
-	 * @return whether a Command is currently registered for the given <code>notificationName</code>.
+	 * @param noteName
+	 * @return whether a Command is currently registered for the given <code>noteName</code>.
 	 */
-	public boolean hasCommand(String notificationName);
+	public boolean hasCommand(String noteName);
 
 	/**
 	 * Register an <code>IMediator</code> instance with the <code>View</code>.
@@ -124,4 +124,10 @@ public interface IFacade extends INotifier {
 	 *            name of the <code>IMediator</code> instance to be removed.
 	 */
 	public IMediator removeMediator(String mediatorName);
+
+    public String getMultitonKey();
+
+    public ILogger getLogger();
+    public void setLogger(ILogger logger);
+
 }

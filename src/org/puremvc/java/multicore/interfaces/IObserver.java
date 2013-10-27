@@ -13,9 +13,9 @@ package org.puremvc.java.multicore.interfaces;
  * In PureMVC, <code>IObserver</code> implementors assume these
  * responsibilities:
  * <UL>
- * <LI>Encapsulate the notification (callback) method of the interested object.</LI>
- * <LI>Encapsulate the notification context (this) of the interested object.</LI>
- * <LI>Provide methods for setting the interested object' notification method
+ * <LI>Encapsulate the note (callback) method of the interested object.</LI>
+ * <LI>Encapsulate the note context (this) of the interested object.</LI>
+ * <LI>Provide methods for setting the interested object' note method
  * and context.</LI>
  * <LI>Provide a method for notifying the interested object.</LI>
  * </UL>
@@ -32,7 +32,7 @@ package org.puremvc.java.multicore.interfaces;
  *
  * <P>
  * An Observer is an object that encapsulates information about an interested
- * object with a notification method that should be called when an </code>INotification</code>
+ * object with a note method that should be called when an </code>INotification</code>
  * is broadcast. The Observer then acts as a proxy for notifying the interested
  * object.
  *
@@ -48,41 +48,41 @@ package org.puremvc.java.multicore.interfaces;
 public interface IObserver {
 
 	/**
-	 * Set the notification method.
+	 * Set the note method.
 	 *
 	 * <P>
-	 * The notification method should take one parameter of type
+	 * The note method should take one parameter of type
 	 * <code>INotification</code>
 	 * </P>
 	 *
 	 * @param notifyMethod
-	 *            the notification (callback) method of the interested object
+	 *            the note (callback) method of the interested object
 	 */
 	public void setNotifyMethod(IFunction notifyMethod);
 
 	/**
-	 * Set the notification context.
+	 * Set the note context.
 	 *
 	 * @param notifyContext
-	 *            the notification context (this) of the interested object
+	 *            the note context (this) of the interested object
 	 */
 	public void setNotifyContext(Object notifyContext);
 
 	/**
 	 * Notify the interested object.
 	 *
-	 * @param notification
+	 * @param note
 	 *            the <code>INotification</code> to pass to the interested
-	 *            object's notification method
+	 *            object's note method
 	 */
-	public void notifyObserver(INotification notification);
+	public void notifyObserver(INotification note);
 
 	/**
 	 * Compare the given object to the notificaiton context object.
 	 *
 	 * @param object
 	 *            the object to compare.
-	 * @return boolean indicating if the notification context and the object are
+	 * @return boolean indicating if the note context and the object are
 	 *         the same.
 	 */
 	public boolean compareNotifyContext(Object object);

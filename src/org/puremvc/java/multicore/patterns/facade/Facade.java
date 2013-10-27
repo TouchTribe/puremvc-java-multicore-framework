@@ -12,11 +12,7 @@ import java.util.Map;
 import org.puremvc.java.multicore.core.controller.Controller;
 import org.puremvc.java.multicore.core.model.Model;
 import org.puremvc.java.multicore.core.view.View;
-import org.puremvc.java.multicore.interfaces.ICommand;
-import org.puremvc.java.multicore.interfaces.IFacade;
-import org.puremvc.java.multicore.interfaces.IMediator;
-import org.puremvc.java.multicore.interfaces.INotification;
-import org.puremvc.java.multicore.interfaces.IProxy;
+import org.puremvc.java.multicore.interfaces.*;
 import org.puremvc.java.multicore.patterns.observer.Notification;
 
 /**
@@ -49,6 +45,8 @@ public class Facade implements IFacade {
 	protected String multitonKey;
 
 	protected static Map<String, Facade> instanceMap = new HashMap<String, Facade>();
+
+    protected ILogger logger;
 
     /**
      * Default Constructor.
@@ -214,20 +212,20 @@ public class Facade implements IFacade {
 	/**
 	 * Remove a previously registered <code>ICommand</code> to <code>INotification</code> mapping from the Controller.
 	 * 
-	 * @param notificationName the name of the <code>INotification</code> to remove the <code>ICommand</code> mapping for
+	 * @param noteName the name of the <code>INotification</code> to remove the <code>ICommand</code> mapping for
 	 */
-	public void removeCommand(String notificationName) {
-		this.controller.removeCommand(notificationName);
+	public void removeCommand(String noteName) {
+		this.controller.removeCommand(noteName);
 	}
 
 	/**
 	 * Check if a Command is registered for a given Notification 
 	 *
-	 * @param notificationName
-	 * @return whether a Command is currently registered for the given <code>notificationName</code>.
+	 * @param noteName
+	 * @return whether a Command is currently registered for the given <code>noteName</code>.
 	 */
-	public boolean hasCommand(String notificationName) {
-		return controller.hasCommand(notificationName);
+	public boolean hasCommand(String noteName) {
+		return controller.hasCommand(noteName);
 	}
 
 	/**
@@ -329,39 +327,39 @@ public class Facade implements IFacade {
 	 * Create and send an <code>INotification</code>.
 	 *
 	 * <P>
-	 * Keeps us from having to construct new notification
+	 * Keeps us from having to construct new note
 	 * instances in our implementation code.
-	 * @param notificationName the name of the notification to send
-	 * @param body the body of the notification (optional)
-	 * @param type the type of the notification (optional)
+	 * @param noteName the name of the note to send
+	 * @param body the body of the note (optional)
+	 * @param type the type of the note (optional)
 	 */
-	public void sendNotification(String notificationName, Object body, String type) {
-		notifyObservers(new Notification(notificationName, body, type));
+	public void sendNotification(String noteName, Object body, String type) {
+		notifyObservers(new Notification(noteName, body, type));
 	}
 
 	/**
 	 * Create and send an <code>INotification</code>.
 	 *
 	 * <P>
-	 * Keeps us from having to construct new notification
+	 * Keeps us from having to construct new note
 	 * instances in our implementation code.
-	 * @param notificationName the name of the notification to send
-	 * @param body the body of the notification (optional)
+	 * @param noteName the name of the note to send
+	 * @param body the body of the note (optional)
 	 */
-	public void sendNotification(String notificationName, Object body) {
-		sendNotification(notificationName, body, null);
+	public void sendNotification(String noteName, Object body) {
+		sendNotification(noteName, body, null);
 	}
 
 	/**
 	 * Create and send an <code>INotification</code>.
 	 *
 	 * <P>
-	 * Keeps us from having to construct new notification
+	 * Keeps us from having to construct new note
 	 * instances in our implementation code.
-	 * @param notificationName the name of the notification to send
+	 * @param noteName the name of the note to send
 	 */
-	public void sendNotification(String notificationName) {
-		sendNotification(notificationName, null, null);
+	public void sendNotification(String noteName) {
+		sendNotification(noteName, null, null);
 	}
 
 	/**
@@ -371,9 +369,9 @@ public class Facade implements IFacade {
 	 *            the <code>INotification</code> to have the <code>View</code>
 	 *            notify observers of.
 	 */
-	private void notifyObservers(INotification notification) {
+	private void notifyObservers(INotification note) {
 		if (this.view != null) {
-			this.view.notifyObservers(notification);
+			this.view.notifyObservers(note);
 		}
 	}
 
@@ -404,4 +402,25 @@ public class Facade implements IFacade {
 		Controller.removeController(key);
 		instanceMap.remove(key);
 	}
+
+    public String getMultitonKey()
+    {
+        return multitonKey;
+    }
+
+    public ILogger getLogger()
+    {
+        return logger;
+    }
+
+    public void setLogger(ILogger logger)
+    {
+        this.logger = logger;
+        if (controller != null) {
+            controller.setLogger(logger);
+        }
+        if (view != null) {
+            view.setLogger(logger);
+        }
+    }
 }

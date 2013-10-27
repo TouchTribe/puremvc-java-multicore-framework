@@ -6,19 +6,12 @@
  */
 package org.puremvc.java.multicore.core.view;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.puremvc.java.multicore.interfaces.IFunction;
-import org.puremvc.java.multicore.interfaces.IMediator;
-import org.puremvc.java.multicore.interfaces.INotification;
-import org.puremvc.java.multicore.interfaces.IObserver;
-import org.puremvc.java.multicore.interfaces.IView;
-import org.puremvc.java.multicore.patterns.mediator.MediatorObserver;
+import org.puremvc.java.multicore.interfaces.*;
 import org.puremvc.java.multicore.patterns.observer.Observer;
 
 /**
@@ -46,6 +39,9 @@ public class View implements IView {
 	// Mapping of Notification names to Observer lists
 	private HashMap<String,List<IObserver>> observerMap;
 	private HashMap<String,IMediator> mediatorMap;
+
+    protected ILogger logger;
+
 
 	/**
 	 * 	 The Multiton Key for this Core.
@@ -115,11 +111,14 @@ public class View implements IView {
 	 *             <code>Observers</code> of.
 	 */
 	public void notifyObservers(INotification note) {
+        if (logger != null) {
+            logger.log(INotification.class, note.toString());
+        }
 		List<IObserver> observers_ref = (List<IObserver>) this.observerMap.get(note.getName());
 		if (observers_ref != null) {
 			// Copy observers from reference array to working array,
             // since the reference array may change during the
-            //notification loop
+            //note loop
 			Object[] observers = (Object[])observers_ref.toArray();
 
 			// Notify Observers from the working array
@@ -133,12 +132,12 @@ public class View implements IView {
 	/**
 	 * Remove the observer for a given notifyContext from an observer list for a given Notification name.
 	 * <P>
-	 * @param notificationName which observer list to remove from 
+	 * @param noteName which observer list to remove from
 	 * @param notifyContext remove the observer with this object as its notifyContext
 	 */
-	public void removeObserver(String notificationName, Object notifyContext) {
-		// the observer list for the notification under inspection
-		List<IObserver> observers = observerMap.get(notificationName);
+	public void removeObserver(String noteName, Object notifyContext) {
+		// the observer list for the note under inspection
+		List<IObserver> observers = observerMap.get(noteName);
 
 		if (observers != null) {
 			// find the observer for the notifyContext
@@ -149,9 +148,9 @@ public class View implements IView {
 				}
 			}
 			// Also, when a Notification's Observer list length falls to
-			// zero, delete the notification key from the observer map
+			// zero, delete the note key from the observer map
 			if (observers.size() == 0) {
-				observerMap.remove(notificationName);
+				observerMap.remove(noteName);
 			}
 		}
 	}
@@ -184,19 +183,21 @@ public class View implements IView {
 			// Register the Mediator for retrieval by name
 			this.mediatorMap.put(mediator.getMediatorName(), mediator);
 
-            for (final MediatorObserver mediatorObserver : mediator.getObservers()) {
-                IFunction function = new IFunction() {
+            // alert the mediator that it has been registered
+            mediator.onRegister();
 
-                    public void onNotification(INotification notification) {
-                        mediatorObserver.handleNotification(notification);
+            for (Map.Entry<String, IFunction> entry : mediator.getObservers().entrySet()) {
+                final String notificationName = entry.getKey();
+                final IFunction listener = entry.getValue();
+                IFunction function = new IFunction() {
+                    public void onNotify(INotification note) {
+                        logger.log(mediator.getClass(),  "Observed " + notificationName);
+                        listener.onNotify(note);
                     }
                 };
                 Observer observer = new Observer(function, mediator);
-                registerObserver(mediatorObserver.getNotificationName(), observer);
+                registerObserver(notificationName, observer);
             }
-
-			// alert the mediator that it has been registered
-			mediator.onRegister();
 		}
 	}
 
@@ -204,17 +205,17 @@ public class View implements IView {
 	 * Register an <code>Observer</code> to be notified of
 	 * <code>INotifications</code> with a given name.
 	 *
-	 * @param notificationName
+	 * @param noteName
 	 *             the name of the <code>Notifications</code> to notify this
 	 *             <code>Observer</code> of
 	 * @param observer
 	 *             the <code>Observer</code> to register
 	 */
-	public void registerObserver(String notificationName, IObserver observer) {
-		if (this.observerMap.get(notificationName) == null) {
-			this.observerMap.put(notificationName, new ArrayList<IObserver>());
+	public void registerObserver(String noteName, IObserver observer) {
+		if (this.observerMap.get(noteName) == null) {
+			this.observerMap.put(noteName, new ArrayList<IObserver>());
 		}
-		List<IObserver> observers = (List<IObserver>) this.observerMap.get(notificationName);
+		List<IObserver> observers = (List<IObserver>) this.observerMap.get(noteName);
 		observers.add(observer);
 	}
 
@@ -229,8 +230,8 @@ public class View implements IView {
 		IMediator mediator = mediatorMap.get(mediatorName);
 
 		if(mediator != null) {
-            for (MediatorObserver observer : mediator.getObservers()) {
-                removeObserver(observer.getNotificationName(), mediator);
+            for (Map.Entry<String, IFunction> entry : mediator.getObservers().entrySet()) {
+                removeObserver(entry.getKey(), mediator);
             }
 
 			// remove the mediator from the map
@@ -274,4 +275,13 @@ public class View implements IView {
 		instanceMap.remove(key);
 	}
 
+    public ILogger getLogger()
+    {
+        return logger;
+    }
+
+    public void setLogger(ILogger logger)
+    {
+        this.logger = logger;
+    }
 }

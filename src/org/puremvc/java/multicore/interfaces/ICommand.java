@@ -17,8 +17,8 @@ public interface ICommand extends INotifier {
 	 * Execute the <code>ICommand</code>'s logic to handle a given
 	 * <code>INotification</code>.
 	 *
-	 * @param notification
+	 * @param note
 	 *            an <code>INotification</code> to handle.
 	 */
-	public void execute(INotification notification);
+	public void execute(INotification note);
 }
