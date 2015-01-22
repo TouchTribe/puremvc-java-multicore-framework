@@ -10,6 +10,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.puremvc.java.multicore.core.view.View;
 import org.puremvc.java.multicore.interfaces.*;
@@ -50,7 +51,8 @@ import org.puremvc.java.multicore.patterns.observer.Observer;
  */
 public class Controller implements IController {
 
-	/**
+    private final static Logger logger = Logger.getLogger(Controller.class.getName());
+    /**
 	 * Mapping of Notification names to Command Class references
 	 */
 	protected Map<String, Class> commandMap;
@@ -66,8 +68,6 @@ public class Controller implements IController {
 	protected String multitonKey;
 
 	protected static Map<String, Controller> instanceMap = new HashMap<String, Controller>();
-
-    protected ILogger logger;
 
 	/**
 	 * Constructor.
@@ -141,8 +141,8 @@ public class Controller implements IController {
                 Constructor constructor = cls.getConstructor();
                 ICommand commandInstance = (ICommand)constructor.newInstance(new Object[] {});
                 commandInstance.initializeNotifier(multitonKey);
-                if (logger != null) {
-                    logger.log(commandInstance.getClass(), "Executing");
+                if (note.isLoggingEnabled()) {
+                    logger.finer("Executing " + commandInstance.getClass().getSimpleName());
                 }
                 commandInstance.execute(note);
             } catch (NoSuchMethodException e) {
@@ -219,14 +219,4 @@ public class Controller implements IController {
 	public boolean hasCommand(String noteName) {
 		return commandMap.containsKey(noteName);
 	}
-
-    public ILogger getLogger()
-    {
-        return logger;
-    }
-
-    public void setLogger(ILogger logger)
-    {
-        this.logger = logger;
-    }
 }

@@ -67,7 +67,4 @@ public interface IController {
 	 * @return whether a Command is currently registered for the given <code>noteName</code>.
 	 */
 	public boolean hasCommand(String noteName);
-
-    public ILogger getLogger();
-    public void setLogger(ILogger logger);
 }

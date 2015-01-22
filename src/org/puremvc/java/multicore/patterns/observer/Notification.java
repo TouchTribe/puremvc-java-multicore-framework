@@ -56,6 +56,8 @@ public class Notification implements INotification {
 	// the body of the note instance
 	private Object body = null;
 
+    private boolean loggingEnabled  = true;
+
 	/**
 	 * Constructor.
 	 *
@@ -141,7 +143,17 @@ public class Notification implements INotification {
 		this.type = type;
 	}
 
-	/**
+    public boolean isLoggingEnabled()
+    {
+        return loggingEnabled;
+    }
+
+    public void setLoggingEnabled(boolean loggingEnabled)
+    {
+        this.loggingEnabled = loggingEnabled;
+    }
+
+    /**
 	 * Get the string representation of the <code>Notification</code>
 	 * instance.
 	 *
@@ -149,7 +161,7 @@ public class Notification implements INotification {
 	 *         instance.
 	 */
 	public String toString() {
-		String result = getName() + " Body:";
+		String result = "Notification: " + getName() + " Body:";
 		if (this.body != null) {
 			result += this.body.toString() + " Type:";
 		} else {

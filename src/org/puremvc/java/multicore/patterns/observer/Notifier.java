@@ -6,6 +6,7 @@
  */
 package org.puremvc.java.multicore.patterns.observer;
 
+import org.puremvc.java.multicore.interfaces.INotification;
 import org.puremvc.java.multicore.patterns.facade.Facade;
 
 /**
@@ -95,6 +96,11 @@ public class Notifier {
 	public void sendNotification(String noteName) {
 		getFacade().sendNotification(noteName);
 	}
+
+    public void sendNotification(INotification note)
+    {
+        getFacade().sendNotification(note);
+    }
 
 	/**
 	 * Initialize this INotifier instance.

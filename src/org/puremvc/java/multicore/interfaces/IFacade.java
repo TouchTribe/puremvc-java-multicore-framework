@@ -126,8 +126,4 @@ public interface IFacade extends INotifier {
 	public IMediator removeMediator(String mediatorName);
 
     public String getMultitonKey();
-
-    public ILogger getLogger();
-    public void setLogger(ILogger logger);
-
 }

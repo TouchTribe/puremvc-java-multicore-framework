@@ -89,4 +89,6 @@ public interface INotification {
 	 *         instance
 	 */
 	public String toString();
+
+    public boolean isLoggingEnabled();
 }

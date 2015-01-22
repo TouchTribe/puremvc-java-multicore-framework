@@ -79,6 +79,8 @@ public interface INotifier {
 	 */
 	public void sendNotification(String noteName);
 
+    public void sendNotification(INotification notification);
+
 	/**
 	 * Initialize this INotifier instance.
 	 * <P>

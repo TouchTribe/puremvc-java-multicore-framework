@@ -46,8 +46,6 @@ public class Facade implements IFacade {
 
 	protected static Map<String, Facade> instanceMap = new HashMap<String, Facade>();
 
-    protected ILogger logger;
-
     /**
      * Default Constructor.
      *
@@ -362,7 +360,12 @@ public class Facade implements IFacade {
 		sendNotification(noteName, null, null);
 	}
 
-	/**
+    public void sendNotification(INotification note)
+    {
+        notifyObservers(note);
+    }
+
+    /**
 	 * Notify <code>Observer</code>s of an <code>INotification</code>.
 	 *
 	 * @param note
@@ -406,21 +409,5 @@ public class Facade implements IFacade {
     public String getMultitonKey()
     {
         return multitonKey;
-    }
-
-    public ILogger getLogger()
-    {
-        return logger;
-    }
-
-    public void setLogger(ILogger logger)
-    {
-        this.logger = logger;
-        if (controller != null) {
-            controller.setLogger(logger);
-        }
-        if (view != null) {
-            view.setLogger(logger);
-        }
     }
 }

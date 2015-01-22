@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.puremvc.java.multicore.interfaces.*;
 import org.puremvc.java.multicore.patterns.observer.Observer;
@@ -34,14 +35,11 @@ import org.puremvc.java.multicore.patterns.observer.Observer;
  * @see org.puremvc.java.multicore.patterns.observer.Notification Notification
  */
 public class View implements IView {
-
-	// Mapping of Mediator names to Mediator instances
+    private final static Logger logger = Logger.getLogger(View.class.getName());
+    // Mapping of Mediator names to Mediator instances
 	// Mapping of Notification names to Observer lists
 	private HashMap<String,List<IObserver>> observerMap;
 	private HashMap<String,IMediator> mediatorMap;
-
-    protected ILogger logger;
-
 
 	/**
 	 * 	 The Multiton Key for this Core.
@@ -111,8 +109,8 @@ public class View implements IView {
 	 *             <code>Observers</code> of.
 	 */
 	public void notifyObservers(INotification note) {
-        if (logger != null) {
-            logger.log(INotification.class, note.toString());
+        if (note.isLoggingEnabled()) {
+            logger.fine(note.toString());
         }
 		List<IObserver> observers_ref = (List<IObserver>) this.observerMap.get(note.getName());
 		if (observers_ref != null) {
@@ -184,6 +182,7 @@ public class View implements IView {
 			this.mediatorMap.put(mediator.getMediatorName(), mediator);
 
             // alert the mediator that it has been registered
+            logger.finer("onRegister: " + mediator.getMediatorName());
             mediator.onRegister();
 
             for (Map.Entry<String, IFunction> entry : mediator.getObservers().entrySet()) {
@@ -191,14 +190,18 @@ public class View implements IView {
                 final IFunction listener = entry.getValue();
                 IFunction function = new IFunction() {
                     public void onNotify(INotification note) {
-                        logger.log(mediator.getClass(),  "Observed " + notificationName);
+                        if (note.isLoggingEnabled()) {
+                            logger.finer(mediator.getClass().getSimpleName() + ": Observed " + notificationName);
+                        }
                         listener.onNotify(note);
                     }
                 };
                 Observer observer = new Observer(function, mediator);
                 registerObserver(notificationName, observer);
             }
-		}
+		} else {
+            logger.warning("Mediator " + mediator.getMediatorName() + " already registered");
+        }
 	}
 
 	/**
@@ -234,9 +237,11 @@ public class View implements IView {
                 removeObserver(entry.getKey(), mediator);
             }
 
+
 			// remove the mediator from the map
 			mediatorMap.remove(mediatorName);
 
+            logger.finer("onRemove: " + mediator.getMediatorName());
 			// alert the mediator that it has been removed
 			mediator.onRemove();
 		}
@@ -274,14 +279,4 @@ public class View implements IView {
 	public synchronized static void removeView(String key) {
 		instanceMap.remove(key);
 	}
-
-    public ILogger getLogger()
-    {
-        return logger;
-    }
-
-    public void setLogger(ILogger logger)
-    {
-        this.logger = logger;
-    }
 }

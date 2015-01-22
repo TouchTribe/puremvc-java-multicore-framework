@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.puremvc</groupId>
 	<artifactId>PureMVC_Java_MultiCore</artifactId>
-	<version>1.0.8.3-touchtribe</version>
+	<version>1.0.9.2-touchtribe</version>
 	<packaging>jar</packaging>
 	<name>PureMVC_Java_MultiCore</name>
     <repositories>
